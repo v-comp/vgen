@@ -85,14 +85,13 @@ const init = (args) => {
       let file = path.join(dir, f);
       sed('-i', /<%name%>/g, name, file);
       sed('-i', /<%moduleName%>/g, moduleName, file);
+      sed('-i', /<%version%>/g, version, file);
+      sed('-i', /<%description%>/g, description, file);
+      sed('-i', /<%author%>/g, author, file);
+
       let file2 = file.replace(/<%(.+)%>/g, (m, g1) => config[g1] || m);
       mv(file, file2);
     });
-
-  let pkgJSON = path.join(dir, 'package.json');
-  sed('-i', /<%version%>/g, version, pkgJSON);
-  sed('-i', /<%description%>/g, description, pkgJSON);
-  sed('-i', /<%author%>/g, author, pkgJSON);
 };
 
 cmd(argvs);
