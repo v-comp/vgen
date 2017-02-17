@@ -1,0 +1,31 @@
+{
+  "name": "vgen",
+  "description": "vue plugin template generator",
+  "version": "1.0.0",
+  "bin": {
+    "vplug": "./cmd.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AngusFu/vgen.git"
+  },
+  "keywords": [
+    "vue",
+    "plugin",
+    "template",
+    "generator"
+  ],
+  "author": "wemlion <angusfu1126@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AngusFu/vgen/issues"
+  },
+  "homepage": "https://github.com/AngusFu/vgen#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "readline-sync": "^1.4.6",
+    "shelljs": "^0.7.6",
+    "v-folder": "^1.3.2"
+  }
+}
