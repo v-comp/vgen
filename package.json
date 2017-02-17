@@ -3,7 +3,7 @@
   "description": "vue plugin template generator",
   "version": "1.0.0",
   "bin": {
-    "vplug": "./cmd.js"
+    "vgen": "./cmd.js"
   },
   "repository": {
     "type": "git",
