@@ -1,9 +1,9 @@
 {
   "name": "vgen",
   "description": "vue plugin template generator",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "bin": {
-    "vgen": "./cmd.js"
+    "vgen": "./index.js"
   },
   "scripts": {
     "start": "babel index.js -o cmd.js"
@@ -24,15 +24,7 @@
     "url": "https://github.com/AngusFu/vgen/issues"
   },
   "homepage": "https://github.com/AngusFu/vgen#readme",
-  "devDependencies": {
-    "babel-cli": "^6.23.0",
-    "babel-plugin-transform-regenerator": "^6.22.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-es2015": "^6.22.0",
-    "babel-preset-stage-3": "^6.22.0"
-  },
   "dependencies": {
-    "chalk": "^1.1.3",
     "enquirer": "^0.4.1",
     "shelljs": "^0.7.6"
   }

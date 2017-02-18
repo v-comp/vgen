@@ -1,11 +1,12 @@
 # vgen(vue-plugin-generator)
 
-A vue@2 standalone component generator, with Rollup, PostCSS and CSS Modules.
+A vue@2 standalone component generator, simple yet helpful, with Rollup, PostCSS and CSS Modules.
 
 ```
 Usage: vgen <command>
-vgen init <component name>
+vgen <component name>
 vgen --version
+vgen --help
 ```
 
 ## Install

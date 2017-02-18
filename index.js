@@ -1,108 +1,127 @@
 #!/usr/bin/env node
-const path = require('path');
-const chalk = require('chalk');
-const Enquirer = require('enquirer');
-const enquirer = new Enquirer();
+var path = require('path');
+var Enquirer = require('enquirer');
+var enquirer = new Enquirer();
 
 require('shelljs/global');
 
-const version = require('./package.json').version;
-const argvs = Array.from(process.argv.slice(2));
+var version = require('./package.json').version;
+var argvs = [].slice.call(process.argv.slice(2));
 
 // utils
-const _ = {
-  kebabCase(name) {
-    name = name.replace(/^[A-Z]/, m => m.toLowerCase());
-    name = name.replace(/([0-9a-zA-Z])[\b\s]*([0-9A-Z])/g, (m, g1, g2) => {
+var _ = {
+  kebabCase: function (name) {
+    name = name.replace(/^[A-Z]/, function (match) {
+      return match.toLowerCase();
+    });
+    name = name.replace(/([0-9a-zA-Z])[\b\s]*([0-9A-Z])/g, function (m, g1, g2) {
       return `${g1}-${g2.toLowerCase()}`
     });
     return name;
   },
-  pascalCase(name) {
+  pascalCase: function (name) {
     name = this.kebabCase(name);
-    name = name.replace(/-([0-9a-zA-Z])/g, (m, g1) => g1.toUpperCase());
-    name = name.replace(/^[a-z]/, m => m.toUpperCase());
+    name = name.replace(/-([0-9a-zA-Z])/g, function (m, g1) {
+      return g1.toUpperCase();
+    });
+    name = name.replace(/^[a-z]/, function (match) {
+      return match.toUpperCase()
+    });
     return name;
   }
 };
 
 // check conditions
-const cmd = argvs => {
-  let [name, ...rest] = argvs;
+var cmd = function (argvs) {
+  var name = argvs[0];
 
   switch(name) {
-    case 'init':
-      init(rest);
-      break;
-
     case '--version':
     case '-version':
     case '-v':
-      console.log(chalk.green(version));
+      console.log(version);
       break;
     
-    default:
-      console.log(`
-A vue@2 standalone component generator, with Rollup, PostCSS and CSS Modules.
+    case '--help':
+    case '-help':
+    case 'help':
+    case '--h':
+    case '-h':
+      console.log('\A vue@2 standalone component generator, with Rollup, PostCSS and CSS Modules.\n\
+Usage: vgen <command>\n\
+vgen <component name>\n\
+vgen --version\n\
+vgen --help\n\
+');
+      break;
 
-Usage: vgen <command>
-vgen init <component name>
-vgen --version
-`);
+    default:
+      ask(argvs);
+      break;
   }
 };
 
-const init = async (args) => {
+var copy = function (config) {
+  let cwd = process.cwd();
+
+  let dirExists = ls(cwd).filter(function (d) {
+    return d === config.name;
+  }).length;
+  
+  let dirName = config.name + (dirExists ? '-1' : '');
+  let dir = path.join(cwd, dirName);
+
+  mkdir(dir);
+  cp('-R', __dirname + '/template/*', dir);
+
+  ls('-Rl', dir).filter(function (stats) {
+    return stats.isFile();
+  }).map(function (file) {
+    return file.name;
+  }).forEach(f => {
+    let file = path.join(dir, f);
+  
+    sed('-i', /<%name%>/g,        config.name,        file);
+    sed('-i', /<%moduleName%>/g,  config.moduleName,  file);
+    sed('-i', /<%version%>/g,     config.version,     file);
+    sed('-i', /<%description%>/g, config.description, file);
+    sed('-i', /<%author%>/g,      config.author,      file);
+
+    let file2 = file.replace(/\{\{#(.+)\}\}/g, function (match, g1) {
+      return config[g1] || match;
+    });
+    mv(file, file2);
+  });
+
+  console.log('\nDone. Please check ./' + dirName);
+};
+
+var ask = function (args) {
   enquirer.question('name', 'Please enter project name: ');
   enquirer.question('version', 'Please enter version: ');
   enquirer.question('description', 'Please enter description: ');
   enquirer.question('author', 'Please enter author: ');
 
-  let projName = args[0];
-  if (!projName) {
-      let answer = await enquirer.prompt('name');
-      projName = answer.name;
-  }
+  var config = {};
 
-  let name = _.kebabCase(projName);
-  let moduleName = _.pascalCase(name);
-
-  let { version }  = await enquirer.prompt('version');
-  let { description } = await enquirer.prompt('description');
-  let { author } = await enquirer.prompt('author');
-  version = version || '1.0.0';
-  description = description || projName;
-  author = author || '';
-
-  let config = {
-    name,
-    moduleName,
-    version,
-    description,
-    author
-  };
-  console.log(config);
-  let cwd = process.cwd();
-  let dirExists = ls(cwd).filter(d => d === name).length;
-  let dir = path.join(cwd, dirExists ? `${name}-1` : name);
-
-  mkdir(dir);
-  cp('-R', `${__dirname}/template/*`, dir);
-
-  ls('-Rl', dir)
-    .filter(stats => stats.isFile())
-    .map(f => f.name)
-    .forEach(f => {
-      let file = path.join(dir, f);
-      sed('-i', /<%name%>/g, name, file);
-      sed('-i', /<%moduleName%>/g, moduleName, file);
-      sed('-i', /<%version%>/g, version, file);
-      sed('-i', /<%description%>/g, description, file);
-      sed('-i', /<%author%>/g, author, file);
-
-      let file2 = file.replace(/\{\{#(.+)\}\}/g, (m, g1) => config[g1] || m);
-      mv(file, file2);
-    });
+  Promise.resolve().then(function () {
+    return args[0] ? { name: args[0] } : enquirer.prompt('name');
+  }).then(function (answer) {
+    var projName = answer.name;
+    config.name = _.kebabCase(projName);
+    config.moduleName = _.pascalCase(config.name);
+    return enquirer.prompt('version');
+  }).then(function (answer) {
+    config.version = answer.version || '1.0.0';
+    return enquirer.prompt('description');
+  }).then(function (answer) {
+    config.description = answer.description || config.name;
+    return enquirer.prompt('author');
+  }).then(function (answer) {
+    config.author = answer.author;
+  }).then(function () {
+    copy(config);
+  });
 };
 
 cmd(argvs);
