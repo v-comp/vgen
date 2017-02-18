@@ -16,3 +16,15 @@ yarn global add vgen
 # or
 npm install vgen -g
 ```
+
+<!--
+## Add git repo
+
+```
+git init
+git add [file]
+git commit -m [msg]
+git remote add origin [repo]
+git push -u origin master
+```
+-->
