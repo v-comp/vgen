@@ -89,7 +89,7 @@ const init = (args) => {
       sed('-i', /<%description%>/g, description, file);
       sed('-i', /<%author%>/g, author, file);
 
-      let file2 = file.replace(/<%(.+)%>/g, (m, g1) => config[g1] || m);
+      let file2 = file.replace(/\{\{#%(.+)\}\}/g, (m, g1) => config[g1] || m);
       mv(file, file2);
     });
 };
