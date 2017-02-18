@@ -25,7 +25,6 @@
   "dependencies": {
     "chalk": "^1.1.3",
     "readline-sync": "^1.4.6",
-    "shelljs": "^0.7.6",
-    "v-folder": "^1.3.2"
+    "shelljs": "^0.7.6"
   }
 }
