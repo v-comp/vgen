@@ -62,14 +62,14 @@ vgen --help\n\
 };
 
 var copy = function (config) {
-  let cwd = process.cwd();
+  var cwd = process.cwd();
 
-  let dirExists = ls(cwd).filter(function (d) {
+  var dirExists = ls(cwd).filter(function (d) {
     return d === config.name;
   }).length;
   
-  let dirName = config.name + (dirExists ? '-1' : '');
-  let dir = path.join(cwd, dirName);
+  var dirName = config.name + (dirExists ? '-1' : '');
+  var dir = path.join(cwd, dirName);
 
   mkdir(dir);
   cp('-R', __dirname + '/template/*', dir);
@@ -79,7 +79,7 @@ var copy = function (config) {
   }).map(function (file) {
     return file.name;
   }).forEach(f => {
-    let file = path.join(dir, f);
+    var file = path.join(dir, f);
   
     sed('-i', /<%name%>/g,        config.name,        file);
     sed('-i', /<%moduleName%>/g,  config.moduleName,  file);
@@ -88,7 +88,7 @@ var copy = function (config) {
     sed('-i', /<%description%>/g, config.description, file);
     sed('-i', /<%author%>/g,      config.author,      file);
 
-    let file2 = file.replace(/\{\{#(.+)\}\}/g, function (match, g1) {
+    var file2 = file.replace(/\{\{#(.+)\}\}/g, function (match, g1) {
       return config[g1] || match;
     });
     mv(file, file2);
