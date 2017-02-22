@@ -37,7 +37,7 @@ export default {
     }),
     vue({
       css: false,
-      compileTemplate: true
+      compileTemplate: <%compile%>
     }),
     commonjs(),
     resolve({
