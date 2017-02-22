@@ -83,6 +83,7 @@ var copy = function (config) {
   
     sed('-i', /<%name%>/g,        config.name,        file);
     sed('-i', /<%moduleName%>/g,  config.moduleName,  file);
+    sed('-i', /<%compile%>/g,     config.compile,     file);
     sed('-i', /<%version%>/g,     config.version,     file);
     sed('-i', /<%description%>/g, config.description, file);
     sed('-i', /<%author%>/g,      config.author,      file);
@@ -98,6 +99,7 @@ var copy = function (config) {
 
 var ask = function (args) {
   enquirer.question('name', 'Please enter project name: ');
+  enquirer.question('compile', 'Compile templates?(y/n) ');
   enquirer.question('version', 'Please enter version: ');
   enquirer.question('description', 'Please enter description: ');
   enquirer.question('author', 'Please enter author: ');
@@ -110,6 +112,13 @@ var ask = function (args) {
     var projName = answer.name;
     config.name = _.kebabCase(projName);
     config.moduleName = _.pascalCase(config.name);
+    return enquirer.prompt('compile');
+  }).then(function (answer) {
+    if (answer.compile.toLowerCase() === 'n') {
+      config.compile = 'false';
+    } else {
+      config.compile = 'true';
+    }
     return enquirer.prompt('version');
   }).then(function (answer) {
     config.version = answer.version || '1.0.0';
