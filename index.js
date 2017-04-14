@@ -110,7 +110,7 @@ var ask = function (args) {
     return args[0] ? { name: args[0] } : enquirer.prompt('name');
   }).then(function (answer) {
     var projName = answer.name;
-    config.name = _.kebabCase(projName);
+    config.name = _.kebabCase(projName.trim());
     config.moduleName = _.pascalCase(config.name);
     return enquirer.prompt('compile');
   }).then(function (answer) {
@@ -121,16 +121,17 @@ var ask = function (args) {
     }
     return enquirer.prompt('version');
   }).then(function (answer) {
-    config.version = answer.version || '1.0.0';
+    config.version = answer.version.trim() || '1.0.0';
     return enquirer.prompt('description');
   }).then(function (answer) {
-    config.description = answer.description || config.name;
+    config.description = (answer.description || config.name).trim();
     return enquirer.prompt('author');
   }).then(function (answer) {
-    config.author = answer.author;
+    config.author = answer.author.trim();
   }).then(function () {
     copy(config);
   });
 };
 
 cmd(argvs);
+
