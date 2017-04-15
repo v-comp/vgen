@@ -87,6 +87,8 @@ var copy = function (config) {
     sed('-i', /<%version%>/g,     config.version,     file);
     sed('-i', /<%description%>/g, config.description, file);
     sed('-i', /<%author%>/g,      config.author,      file);
+    sed('-i', /<%githubUser%>/g,  config.githubUser,  file);
+    sed('-i', /<%keywords%>/g,    config.keywords,    file);
 
     var file2 = file.replace(/\{\{#(.+)\}\}/g, function (match, g1) {
       return config[g1] || match;
@@ -102,36 +104,54 @@ var ask = function (args) {
   enquirer.question('compile', 'Compile templates?(y/n) ');
   enquirer.question('version', 'Please enter version: ');
   enquirer.question('description', 'Please enter description: ');
+  enquirer.question('keywords', 'Please enter keywords: ');
   enquirer.question('author', 'Please enter author: ');
+  enquirer.question('githubUser', 'Your github user name: ');
 
   var config = {};
 
   Promise.resolve().then(function () {
     return args[0] ? { name: args[0] } : enquirer.prompt('name');
-  }).then(function (answer) {
+  })
+  .then(function (answer) {
     var projName = answer.name;
     config.name = _.kebabCase(projName.trim());
     config.moduleName = _.pascalCase(config.name);
     return enquirer.prompt('compile');
-  }).then(function (answer) {
+  })
+  .then(function (answer) {
     if (answer.compile.toLowerCase() === 'n') {
       config.compile = 'false';
     } else {
       config.compile = 'true';
     }
     return enquirer.prompt('version');
-  }).then(function (answer) {
+  })
+  .then(function (answer) {
     config.version = answer.version.trim() || '1.0.0';
+    return enquirer.prompt('keywords');
+  })
+  .then(function (answer) {
+    var keywords = answer.keywords
+      .replace(/\s+/g, ',')
+      .split(',')
+      .map(i => JSON.stringify(i))
+      .join(', ');
+    config.keywords = keywords;
     return enquirer.prompt('description');
-  }).then(function (answer) {
+  })
+  .then(function (answer) {
     config.description = (answer.description || config.name).trim();
     return enquirer.prompt('author');
-  }).then(function (answer) {
+  })
+  .then(function (answer) {
     config.author = answer.author.trim();
-  }).then(function () {
+    return enquirer.prompt('githubUser');
+  })
+  .then(function (answer) {
+    config.githubUser = answer.githubUser.trim() || 'unknown';
     copy(config);
   });
 };
 
 cmd(argvs);
-

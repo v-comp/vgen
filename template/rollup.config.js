@@ -12,7 +12,13 @@ const isDEV = process.env.NODE_ENV !== 'production';
 
 export default {
   entry: isDEV ? './src/demo.js' : './src/index.js',
-  dest:  isDEV ? 'dist/demo.js'  : 'dist/build.js',
+  targets: isDEV ? [
+    { dest: 'dist/demo.js', format: 'umd' }
+  ] : [
+    { dest: 'dist/<%name%>.js', format: 'umd' },
+    { dest: 'dist/<%name%>.common.js', format: 'cjs' },
+    { dest: 'dist/<%name%>.esm.js', format: 'es' }
+  ],
   format: 'umd',
   sourceMap: true,
   useStrict: true,
@@ -24,13 +30,13 @@ export default {
     postcss({
       plugins: [
         postcssModules({
-          getJSON (id, exportTokens) {
+          getJSON(id, exportTokens) {
             cssExportMap[id] = exportTokens;
           }
         }),
         cssnano()
       ],
-      getExport (id) {
+      getExport(id) {
         return cssExportMap[id];
       },
       extensions: ['.css']

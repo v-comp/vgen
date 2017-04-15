@@ -2,8 +2,11 @@
   "name": "<%name%>",
   "version": "<%version%>",
   "description": "<%description%>",
-  "author": "<%author%>",
-  "main": "./dist/build",
+  "keywords": [<%keywords%>],
+  "main": "dist/<%name%>.common.js",
+  "module": "dist/<%name%>.esm.js",
+  "unpkg": "dist/<%name%>.js",
+  "files": ["dist"],
   "scripts": {
     "server": "browser-sync start --server --reload-delay 1 --files \"index.html, ./dist/**\"",
     "build:watch": "cross-env NODE_ENV=development rollup -c rollup.config.js -w",
@@ -29,5 +32,15 @@
   },
   "dependencies": {
     "classnames": "^2.2.5"
-  }
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/<%githubUser%>/<%name%>.git"
+  },
+  "bugs": {
+    "url": "https://github.com/<%githubUser%>/<%name%>/issues"
+  },
+  "homepage": "https://github.com/<%githubUser%>/<%name%>#readme",
+  "author": "<%author%>"
 }
