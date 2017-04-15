@@ -1,25 +1,22 @@
 {
   "name": "vgen",
   "description": "vue plugin template generator",
-  "version": "2.4.0",
-  "bin": {
-    "vgen": "./index.js"
-  },
-  "scripts": {
-    "start": "babel index.js -o cmd.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/v-comp/vgen.git"
-  },
   "keywords": [
     "vue",
     "plugin",
     "template",
     "generator"
   ],
+  "version": "2.4.0",
+  "bin": {
+    "vgen": "./index.js"
+  },
   "author": "wemlion <angusfu1126@qq.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/v-comp/vgen.git"
+  },
   "bugs": {
     "url": "https://github.com/v-comp/vgen/issues"
   },

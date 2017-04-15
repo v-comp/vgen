@@ -10,6 +10,7 @@
   "scripts": {
     "server": "browser-sync start --server --reload-delay 1 --files \"index.html, ./dist/**\"",
     "build:watch": "cross-env NODE_ENV=development rollup -c rollup.config.js -w",
+    "build:dev": "cross-env NODE_ENV=development rollup -c rollup.config.js",
     "build": "cross-env NODE_ENV=production rollup -c rollup.config.js",
     "start": "run-p build:watch server"
   },

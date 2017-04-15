@@ -80,7 +80,11 @@ var copy = function (config) {
     return file.name;
   }).forEach(f => {
     var file = path.join(dir, f);
-  
+
+    if (f === 'gitignore' || f === 'npmignore') {
+      return mv(file, path.join(dir, '.' + f));
+    }
+
     sed('-i', /<%name%>/g,        config.name,        file);
     sed('-i', /<%moduleName%>/g,  config.moduleName,  file);
     sed('-i', /<%compile%>/g,     config.compile,     file);
@@ -96,7 +100,28 @@ var copy = function (config) {
     mv(file, file2);
   });
 
-  console.log('\nDone. Please check ./' + dirName);
+  return dirName;
+};
+
+var installAndCommit = function (config) {
+  cd(config.dirName);
+  console.log('Start installing dependencies...');
+
+  if (which('yarn')) {
+    exec('yarn install');
+  } else {
+    exec('npm install');
+  }
+
+  exec('npm run build:dev');
+  exec('npm run build');
+  console.log('Initializing git repo...');
+  exec('git init');
+  exec('git add -A');
+  exec('git commit -m "initializing repo"');
+  exec('git add -A');
+  exec(`git remote add origin git@github.com:${config.githubUser}/${config.name}.git`);
+  exec(`git push -u origin master`);
 };
 
 var ask = function (args) {
@@ -106,7 +131,8 @@ var ask = function (args) {
   enquirer.question('description', 'Please enter description: ');
   enquirer.question('keywords', 'Please enter keywords: ');
   enquirer.question('author', 'Please enter author: ');
-  enquirer.question('githubUser', 'Your github user name: ');
+  enquirer.question('githubUser', 'Your github account name: ');
+  enquirer.question('init', 'Install and init git?(y/n) ');
 
   var config = {};
 
@@ -150,7 +176,14 @@ var ask = function (args) {
   })
   .then(function (answer) {
     config.githubUser = answer.githubUser.trim() || 'unknown';
-    copy(config);
+    config.dirName = copy(config);
+    return enquirer.prompt('init');
+  })
+  .then(function (answer) {
+    if (answer.init !== 'n') {
+      installAndCommit(config);
+    }
+    console.log('\nDone. Please check ./' + config.dirName);
   });
 };
 
