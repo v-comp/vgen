@@ -80,8 +80,8 @@ var copy = function (config) {
     return file.name;
   }).forEach(f => {
     var file = path.join(dir, f);
-
-    if (f === 'gitignore' || f === 'npmignore') {
+    var dotfiles = ['editorconfig', 'gitignore', 'npmignore'];
+    if (dotfiles.indexOf(f) > -1) {
       return mv(file, path.join(dir, '.' + f));
     }
 
