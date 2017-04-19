@@ -105,18 +105,25 @@ var copy = function (config) {
 
 var installAndCommit = function (config) {
   cd(config.dirName);
-  console.log('Start installing dependencies...');
 
+  // because we used husky
+  // we've to initialize repo before
+  // running `npm install`
+  console.log('Initializing git repo...');
+  exec('git init');
+
+  console.log('Start installing dependencies...');
   if (which('yarn')) {
     exec('yarn install');
   } else {
     exec('npm install');
   }
 
+  console.log('Npm run build...');
   exec('npm run build:dev');
   exec('npm run build');
-  console.log('Initializing git repo...');
-  exec('git init');
+
+  console.log('Commit files...');
   exec('git add -A');
   exec('git commit -m "initializing repo"');
   exec('git add -A');
