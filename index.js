@@ -41,7 +41,7 @@ var cmd = function (argvs) {
     case '-v':
       console.log(version);
       break;
-    
+
     case '--help':
     case '-help':
     case 'help':
@@ -67,7 +67,7 @@ var copy = function (config) {
   var dirExists = ls(cwd).filter(function (d) {
     return d === config.name;
   }).length;
-  
+
   var dirName = config.name + (dirExists ? '-1' : '');
   var dir = path.join(cwd, dirName);
 
@@ -80,7 +80,7 @@ var copy = function (config) {
     return file.name;
   }).forEach(f => {
     var file = path.join(dir, f);
-    var dotfiles = ['editorconfig', 'gitignore', 'npmignore'];
+    var dotfiles = ['editorconfig', 'gitignore', 'npmignore', 'eslintrc', 'eslintignore'];
     if (dotfiles.indexOf(f) > -1) {
       return mv(file, path.join(dir, '.' + f));
     }

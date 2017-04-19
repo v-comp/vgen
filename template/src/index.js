@@ -1,7 +1,7 @@
-import <%moduleName%>Component from './<%name%>.vue';
+import <%moduleName%>Comp from './<%name%>.vue';
 
-<%moduleName%>Component.install =  Vue => {
-  Vue.component(<%moduleName%>Component.name, <%moduleName%>Component );
+<%moduleName%>Comp.install = Vue => {
+  Vue.component(<%moduleName%>Comp.name, <%moduleName%>Comp);
 };
 
-export default <%moduleName%>Component;
+export default <%moduleName%>Comp;

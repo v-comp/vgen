@@ -12,7 +12,9 @@
     "build:watch": "cross-env NODE_ENV=development rollup -c rollup.config.js -w",
     "build:dev": "cross-env NODE_ENV=development rollup -c rollup.config.js",
     "build": "cross-env NODE_ENV=production rollup -c rollup.config.js",
-    "start": "run-p build:watch server"
+    "start": "run-p build:watch server",
+    "lint": "eslint ./src/*.vue ./src/*.js",
+    "precommit": "npm run lint"
   },
   "devDependencies": {
     "browser-sync": "^2.18.8",
@@ -28,7 +30,12 @@
     "rollup-plugin-replace": "^1.1.1",
     "rollup-plugin-uglify": "^1.0.1",
     "rollup-plugin-vue": "^2.2.20",
-    "rollup-watch": "^3.2.2"
+    "rollup-watch": "^3.2.2",
+    "babel-eslint": "^7.2.2",
+    "eslint": "^3.19.0",
+    "eslint-config-vue": "^2.0.2",
+    "eslint-plugin-vue": "^2.0.1",
+    "husky": "^0.13.3"
   },
   "dependencies": {
     "classnames": "^2.2.5"
